@@ -150,3 +150,29 @@ class TestAccountService(TestCase):
 
         response = self.client.get(f"{BASE_URL}/0")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    ######################################################################
+    #  LIST ACCOUNTS
+    ######################################################################
+
+    def test_list_accounts(self):
+        """It should List all Accounts"""
+
+        self._create_accounts(3)
+
+        response = self.client.get(BASE_URL)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.get_json()
+        self.assertEqual(len(data), 3)
+
+    def test_list_accounts_empty(self):
+        """It should return empty list when no accounts exist"""
+
+        response = self.client.get(BASE_URL)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.get_json()
+        self.assertEqual(data, [])
